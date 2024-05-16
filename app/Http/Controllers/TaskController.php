@@ -20,7 +20,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return route('task.store');
     }
 
     /**
@@ -28,7 +28,13 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $task = new Task();
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->status = $request->status;
+        $task->due_date = $request->due_date;
+        $task->save();
+        return response('l\'information has been saved in database');
     }
 
     /**
