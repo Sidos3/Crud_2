@@ -12,7 +12,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('TaskManager.create');
+        $tasks = Task::get();
+        return view('TaskManager.index', compact('tasks'));
     }
 
     /**
@@ -20,7 +21,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return route('task.store');
+        return view('TaskManager.create');
     }
 
     /**
@@ -28,44 +29,59 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $task = new Task();
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->status = $request->status;
-        $task->due_date = $request->due_date;
-        $task->save();
+        // $task = new Task();
+        // $task->title = $request->title;
+        // $task->description = $request->description;
+        // $task->status = $request->status;
+        // $task->due_date = $request->due_date;
+        // $task->save();
+        $task = Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'due_date' => $request->due_date
+        ]);
         return response('l\'information has been saved in database');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show($id)
     {
-        //
+        Task::findorFail($id)->delete();
+        return response('information delete');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
+    public function edit($id)
     {
-        //
+        $task = Task::findorFail($id);
+        return view('TaskManager.edit', compact('task'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, $id)
     {
-        //
+        $task = Task::findorFail($id);
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->status = $request->status;
+        $task->due_date = $request->due_date;
+        $task->save();
+        return response('l\'inforation has been update');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy($id)
     {
-        //
+        Task::findorFail($id)->delete();
+        return response('information delete');
     }
 }
